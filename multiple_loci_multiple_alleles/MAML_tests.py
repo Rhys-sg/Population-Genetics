@@ -25,15 +25,15 @@ generations=100
 #     (('A1', 'A1'), ('B2', 'B2')): 0.05 
 # }
 genotype_counts = {
-    (('A1', 'A2'), ('B1', 'B1')): 10,
-    (('A1', 'A2'), ('B1', 'B2')): 30,
-    (('A1', 'A2'), ('B2', 'B2')): 15,
-    (('A2', 'A2'), ('B1', 'B1')): 5,
-    (('A2', 'A2'), ('B1', 'B2')): 20,
-    (('A2', 'A2'), ('B2', 'B2')): 10,
-    (('A1', 'A1'), ('B1', 'B1')): 5,
-    (('A1', 'A1'), ('B1', 'B2')): 10,
-    (('A1', 'A1'), ('B2', 'B2')): 5 
+    (('A1', 'A2'), ('B1', 'B1')): 1000,
+    (('A1', 'A2'), ('B1', 'B2')): 3000,
+    (('A1', 'A2'), ('B2', 'B2')): 1500,
+    (('A2', 'A2'), ('B1', 'B1')): 500,
+    (('A2', 'A2'), ('B1', 'B2')): 2000,
+    (('A2', 'A2'), ('B2', 'B2')): 1000,
+    (('A1', 'A1'), ('B1', 'B1')): 500,
+    (('A1', 'A1'), ('B1', 'B2')): 1000,
+    (('A1', 'A1'), ('B2', 'B2')): 500 
 }
 genotype_fitness = {
     (('A1', 'A2'), ('B1', 'B1')): 1.0,
@@ -46,10 +46,10 @@ genotype_fitness = {
     (('A1', 'A1'), ('B1', 'B2')): 0.8,
     (('A1', 'A1'), ('B2', 'B2')): 0.8 
 }
-
+growth_rate=1
 drift=0
 
 mutations = [{('A1', 'A2'): 0.0, ('A2', 'A1'): 0.0,},
              {('B1', 'B2'): 0.0, ('B2', 'B1'): 0.0}]
 
-next_genotype_frequencies(generations, genotype_counts, genotype_fitness, drift, mutations)
+next_genotype_frequencies(generations, genotype_counts, genotype_fitness, growth_rate, drift, mutations)

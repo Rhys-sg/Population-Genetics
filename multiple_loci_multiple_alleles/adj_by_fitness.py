@@ -11,4 +11,4 @@ def adj_by_fitness(genotype_counts, genotype_fitness):
 
     """
     
-    return {key: genotype_counts[key] * genotype_fitness[key] for key in genotype_counts}
+    return {genotype: round(genotype_counts[genotype] * genotype_fitness[genotype]) for genotype in genotype_counts}

@@ -6,7 +6,8 @@ from calc_genotype_freqs import calc_genotype_freqs
 from calc_allele_freqs import calc_allele_freqs
 from calc_allele_counts import calc_allele_counts
 
-from calc_next_generation_genotype_count import calc_next_generation_genotype_count
+from calc_next_genotype_freqs import calc_next_genotype_freqs
+from calc_genotype_counts import calc_genotype_counts
 
 from plot_genotype_freqs import plot_genotype_freqs
 from plot_allele_freqs import plot_allele_freqs
@@ -20,6 +21,7 @@ variables:
 - growth_rate
 - bottleneck_yr
 - bottleneck_pop
+- non-random mating
 
 small pops:
 - pop-based drift (Make drift inversely proportional to the size of the population)
@@ -33,7 +35,7 @@ maybes:
 """
 
 
-def next_genotype_frequencies(generations, init_genotype_counts, growth_rate=1, genotype_fitness=None, drift=None, mutations=None):
+def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitness=None, growth_rate=1, drift=None, mutations=None):
     
     # Initialize values
     init_pop = sum(init_genotype_counts.values())
@@ -42,6 +44,7 @@ def next_genotype_frequencies(generations, init_genotype_counts, growth_rate=1, 
     init_allele_freq = calc_allele_freqs(init_allele_counts)
 
     # Initialize lists for graphing
+    gens_pop = [init_pop]
     gens_genotype_counts = [init_genotype_counts]
     gens_genotype_freqs = [init_genotype_freqs]
     gens_allele_counts = [init_allele_counts]
@@ -51,20 +54,33 @@ def next_genotype_frequencies(generations, init_genotype_counts, growth_rate=1, 
     for _ in range(generations):
         curr_genotype_counts = gens_genotype_counts[-1]
 
-        # Apply evolutionary forces
+        # Apply evolutionary forces to genotypes in the current generation
         if genotype_fitness:
             curr_genotype_counts = adj_by_fitness(curr_genotype_counts, genotype_fitness)
         if drift:
             curr_genotype_counts = adj_by_drift(curr_genotype_counts, drift)
 
-        # Calculate allele frequencies for random recombinations
+        # Apply evolutionary forces to alleles in the current generation
         curr_allele_counts = calc_allele_counts(curr_genotype_counts)
-        if mutations: curr_allele_counts = adj_by_mutation(curr_allele_counts, mutations)
+        if mutations:
+            curr_allele_counts = adj_by_mutation(curr_allele_counts, mutations)
+        
+        # Calculate variables for recombination and growth
+        curr_allele_freqs = calc_allele_freqs(curr_allele_counts)
+        next_pop = gens_pop[-1] * growth_rate
 
-        # next_genotype_freqs = calc_next_generation_genotype_count(curr_allele_freqs)
+        # Calculate the next generation
+        next_genotype_freqs = calc_next_genotype_freqs(curr_allele_freqs)
+        next_genotype_counts = calc_genotype_counts(next_genotype_freqs, next_pop, growth_rate)
+        next_allele_counts = calc_allele_counts(next_genotype_counts)
+        next_allele_freqs = calc_allele_freqs(next_allele_counts)
 
-        # gens_genotype_freqs.append(next_genotype_freqs)
-        # gens_allele_freqs.append(curr_allele_freqs)
+        # Append the values to the lists
+        gens_pop.append(next_pop)
+        gens_genotype_counts.append(next_genotype_counts)
+        gens_genotype_freqs.append(next_genotype_freqs)
+        gens_allele_counts.append(next_allele_counts)
+        gens_allele_freqs.append(next_allele_freqs)
 
     fig = create_combined_plot(gens_allele_freqs, gens_genotype_freqs)
     plt.show()
