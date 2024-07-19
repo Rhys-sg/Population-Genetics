@@ -1,6 +1,6 @@
 import itertools
 
-def calc_genotype_freqs(allele_frequencies):
+def calc_next_generation_genotype_count(allele_frequencies):
     """
     Calculate genotype frequencies for multiple loci with given allele frequencies.
 
