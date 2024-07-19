@@ -1,6 +1,6 @@
 from main import next_genotype_frequencies
 
-generations=100
+generations=1000
 
 # genotype_freqs = {
 #     (('A1', 'A1'),): 0.25,

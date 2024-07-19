@@ -9,9 +9,7 @@ from calc_allele_counts import calc_allele_counts
 from calc_next_genotype_freqs import calc_next_genotype_freqs
 from calc_genotype_counts import calc_genotype_counts
 
-from plot_genotype_freqs import plot_genotype_freqs
-from plot_allele_freqs import plot_allele_freqs
-from plot_freqs import create_combined_plot
+from plot.plot import create_combined_plot
 
 import matplotlib.pyplot as plt
 """
@@ -82,6 +80,9 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
         gens_allele_counts.append(next_allele_counts)
         gens_allele_freqs.append(next_allele_freqs)
 
-    fig = create_combined_plot(gens_allele_freqs, gens_genotype_freqs)
+    fig = create_combined_plot(gens_genotype_counts,
+                               gens_genotype_freqs,
+                               gens_allele_counts,
+                               gens_allele_freqs)
     plt.show()
 
