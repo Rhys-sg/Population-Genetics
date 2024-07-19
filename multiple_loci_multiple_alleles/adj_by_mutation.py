@@ -3,11 +3,11 @@ def adj_by_mutation(allele_freq, mutations):
     Adjust allele frequencies by mutating one allele into another, given a frequency.
 
     Parameters:
-    allele_freq (list): A list of dictionaries representing allele frequencies.
-    mutations (list): A list of dictionaries representing mutations.
+    - allele_freq (list): A list of dictionaries representing allele frequencies.
+    - mutations (list): A list of dictionaries representing mutations.
 
     Returns:
-    list: A list of dictionaries representing adjusted allele frequencies
+    - list: A list of dictionaries representing adjusted allele frequencies
 
     """
     for i, mutation in enumerate(mutations):

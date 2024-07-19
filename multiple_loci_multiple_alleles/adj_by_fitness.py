@@ -3,9 +3,11 @@ def adj_by_fitness(genotype_freqs, genotype_fitness):
     Adjust genotype frequencies by fitness.
     
     Args:
-        genotype_freqs (dict): A dictionary of genotypes and their frequencies.
-        genotype_fitness (dict): A dictionary of genotypes and their fitnesses.
+    - genotype_freqs (dict): A dictionary of genotypes and their frequencies.
+    - genotype_fitness (dict): A dictionary of genotypes and their fitnesses.
 
+    Returns:
+    - dict: A dictionary of genotypes and their adjusted frequencies
 
     """
     
