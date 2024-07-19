@@ -22,7 +22,7 @@ variables:
 - bottleneck_pop
 
 small pops:
-- pop-based drift
+- pop-based drift (Make drift inversely proportional to the size of the population)
 - inbreeding
 
 maybes:
@@ -57,13 +57,14 @@ def next_genotype_frequencies(generations, init_genotype_counts, growth_rate=1, 
         if drift:
             curr_genotype_counts = adj_by_drift(curr_genotype_counts, drift)
 
-        current_allele_freqs = calc_allele_freqs(curr_genotype_counts)
-        if mutations: current_allele_freqs = adj_by_mutation(current_allele_freqs, mutations)
+        # Calculate allele frequencies for random recombinations
+        curr_allele_counts = calc_allele_counts(curr_genotype_counts)
+        if mutations: curr_allele_counts = adj_by_mutation(curr_allele_counts, mutations)
 
-        next_genotype_freqs = calc_next_generation_genotype_count(current_allele_freqs)
+        # next_genotype_freqs = calc_next_generation_genotype_count(curr_allele_freqs)
 
-        gens_genotype_freqs.append(next_genotype_freqs)
-        gens_allele_freqs.append(current_allele_freqs)
+        # gens_genotype_freqs.append(next_genotype_freqs)
+        # gens_allele_freqs.append(curr_allele_freqs)
 
     fig = create_combined_plot(gens_allele_freqs, gens_genotype_freqs)
     plt.show()

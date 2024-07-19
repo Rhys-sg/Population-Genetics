@@ -1,14 +1,14 @@
-def adj_by_fitness(genotype_freqs, genotype_fitness):
+def adj_by_fitness(genotype_counts, genotype_fitness):
     """
-    Adjust genotype frequencies by fitness.
+    Adjust genotype counts by fitness.
     
     Args:
-    - genotype_freqs (dict): A dictionary of genotypes and their frequencies.
+    - genotype_counts (dict): A dictionary of genotypes and their counts.
     - genotype_fitness (dict): A dictionary of genotypes and their fitnesses.
 
     Returns:
-    - dict: A dictionary of genotypes and their adjusted frequencies
+    - dict: A dictionary of genotypes and their adjusted counts
 
     """
     
-    return {key: genotype_freqs[key] * genotype_fitness[key] for key in genotype_freqs}
+    return {key: genotype_counts[key] * genotype_fitness[key] for key in genotype_counts}
