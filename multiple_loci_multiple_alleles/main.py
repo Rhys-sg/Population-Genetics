@@ -57,8 +57,8 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
         curr_genotype_counts = gens_genotype_counts[-1]
 
         # Calculate population size for the next generation, apply bottleneck
-        if bottleneck_yr == i:
-            curr_genotype_counts = adj_by_drift(curr_genotype_counts, 1-bottleneck_pop/next_pop)
+        if bottleneck_yr == i and next_pop > bottleneck_pop:
+            curr_genotype_counts = adj_by_drift(curr_genotype_counts, 1-bottleneck_pop/next_pop, bottleneck_pop, carrying_capacity)
             next_pop = bottleneck_pop
         else:
             next_pop = calc_next_pop(gens_pop[-1], growth_rate, carrying_capacity)
@@ -67,7 +67,7 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
         if genotype_fitness:
             curr_genotype_counts = adj_by_fitness(curr_genotype_counts, genotype_fitness)
         if drift:
-            curr_genotype_counts = adj_by_drift(curr_genotype_counts, drift)
+            curr_genotype_counts = adj_by_drift(curr_genotype_counts, drift, next_pop, carrying_capacity)
 
         # Apply evolutionary forces to alleles in the current generation
         curr_allele_counts = calc_allele_counts(curr_genotype_counts)
