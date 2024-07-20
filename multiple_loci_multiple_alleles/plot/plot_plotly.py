@@ -69,8 +69,8 @@ def create_combined_plot(gens_pop, gens_genotype_counts, gens_genotype_freqs, ge
         subplot_titles=[
             'Population Size Over Generations',
             'Genotype Counts Over Generations',
-            'Average Fitness Over Generations',
             'Genotype Frequencies Over Generations',
+            'Average Fitness Over Generations',
             'Allele Counts Over Generations',
             'Allele Frequencies Over Generations'
         ]
@@ -84,11 +84,11 @@ def create_combined_plot(gens_pop, gens_genotype_counts, gens_genotype_freqs, ge
     for trace in traces:
         fig.add_trace(trace, row=1, col=2)
 
-    traces = add_traces({'Average Fitness': gens_avg_fitness}, 'lines', 'Average Fitness Over Generations', 'Count')
+    traces = add_traces(genotype_freqs_data, 'lines', 'Genotype Frequencies Over Generations', 'Frequency')
     for trace in traces:
         fig.add_trace(trace, row=1, col=3)
 
-    traces = add_traces(genotype_freqs_data, 'lines', 'Genotype Frequencies Over Generations', 'Frequency')
+    traces = add_traces({'Average Fitness': gens_avg_fitness}, 'lines', 'Average Fitness Over Generations', 'Count')
     for trace in traces:
         fig.add_trace(trace, row=2, col=1)
 
