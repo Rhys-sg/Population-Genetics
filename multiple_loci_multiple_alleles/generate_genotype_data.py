@@ -10,7 +10,7 @@ def generate_genotype_combinations(alleles):
     all_combinations = list(itertools.product(*[allele_pairs[locus] for locus in loci]))
     return all_combinations
 
-def generate_genotype_data(num_loci, num_alleles, population_size, loci_names=None, random_seed=0):
+def generate_genotype_data(num_loci, num_alleles, population_size, loci_names=None, random_seed=None):
     random.seed(random_seed)
 
     if not loci_names:

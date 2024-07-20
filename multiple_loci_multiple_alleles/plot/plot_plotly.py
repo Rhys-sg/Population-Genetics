@@ -102,7 +102,6 @@ def create_combined_plot(gens_pop, gens_genotype_counts, gens_genotype_freqs, ge
 
     # Update layout
     fig.update_layout(
-        title='Combined Plot',
         xaxis_title='Generation',
         yaxis_title='Value',
         hovermode='closest',

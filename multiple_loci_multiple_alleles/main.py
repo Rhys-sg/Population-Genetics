@@ -21,8 +21,6 @@ from plot.plot_plotly import create_combined_plot
 """
 TODO:
 variables:
-- bottleneck_yr
-- bottleneck_pop
 - non-random mating
 
 small pops:
@@ -60,7 +58,6 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
 
         # Calculate population size for the next generation, apply bottleneck
         if bottleneck_yr == i:
-            print(bottleneck_pop/next_pop)
             curr_genotype_counts = adj_by_drift(curr_genotype_counts, 1-bottleneck_pop/next_pop)
             next_pop = bottleneck_pop
         else:
