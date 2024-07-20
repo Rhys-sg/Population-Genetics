@@ -17,18 +17,10 @@ from calc_next_genotype_freqs import calc_next_genotype_freqs
 # from plot.plot import create_combined_plot
 from plot.plot_plotly import create_combined_plot
 
-"""
-Priority:
-- avg_fitness (function, appending, graphing)
-- fix carrying capacity
-"""
 
 """
 TODO:
 variables:
-- genotype_freqs -> genotype_counts
-x growth_rate
-- carrying_capacity
 - bottleneck_yr
 - bottleneck_pop
 - non-random mating
@@ -45,7 +37,7 @@ maybes:
 """
 
 
-def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitness=None, growth_rate=1, carrying_capacity=None, drift=None, mutations=None):
+def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitness=None, growth_rate=1, carrying_capacity=None, drift=None, mutations=None, bottleneck_yr=None, bottleneck_pop=None,):
     
     # Initialize values
     init_pop = sum(init_genotype_counts.values())
@@ -63,8 +55,16 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
     gens_avg_fitness = [init_avg_fitness]
 
     # Repeates for each generation
-    for _ in range(generations):
+    for i in range(generations):
         curr_genotype_counts = gens_genotype_counts[-1]
+
+        # Calculate population size for the next generation, apply bottleneck
+        if bottleneck_yr == i:
+            print(bottleneck_pop/next_pop)
+            curr_genotype_counts = adj_by_drift(curr_genotype_counts, 1-bottleneck_pop/next_pop)
+            next_pop = bottleneck_pop
+        else:
+            next_pop = calc_next_pop(gens_pop[-1], growth_rate, carrying_capacity)
 
         # Apply evolutionary forces to genotypes in the current generation
         if genotype_fitness:
@@ -76,10 +76,9 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
         curr_allele_counts = calc_allele_counts(curr_genotype_counts)
         if mutations:
             curr_allele_counts = adj_by_mutation(curr_allele_counts, mutations)
-        
+
         # Calculate variables for recombination and growth
         curr_allele_freqs = calc_allele_freqs(curr_allele_counts)
-        next_pop = calc_next_pop(gens_pop[-1], growth_rate, carrying_capacity)
         
         # Calculate the next generation
         next_genotype_freqs = calc_next_genotype_freqs(curr_allele_freqs)
