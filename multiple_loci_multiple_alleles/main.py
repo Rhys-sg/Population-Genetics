@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import math
+import plotly 
 
 from adj_by_fitness import adj_by_fitness
 from adj_by_drift import adj_by_drift
@@ -14,7 +14,8 @@ from calc_avg_fitness import calc_avg_fitness
 from calc_next_pop import calc_next_pop
 from calc_next_genotype_freqs import calc_next_genotype_freqs
 
-from plot.plot import create_combined_plot
+# from plot.plot import create_combined_plot
+from plot.plot_plotly import create_combined_plot
 
 """
 Priority:
@@ -101,5 +102,6 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
                                gens_allele_counts,
                                gens_allele_freqs,
                                gens_avg_fitness)
+    fig.show()
     plt.show()
 
