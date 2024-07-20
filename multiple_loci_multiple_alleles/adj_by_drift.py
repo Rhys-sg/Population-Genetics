@@ -22,6 +22,7 @@ def adj_by_drift(genotype_counts, drift, pop_size, carrying_capacity):
 
     return {key: round(genotype_counts[key] * random.uniform(1-norm_adj_drift, 1+norm_adj_drift)) for key in genotype_counts}
 
+
 def normalize_adj_drift(drift, pop_size, carrying_capacity):
     """
     Helper function to normalize the drift based on the population size and carrying capacity.

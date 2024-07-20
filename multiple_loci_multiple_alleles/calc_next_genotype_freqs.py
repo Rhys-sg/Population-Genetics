@@ -1,8 +1,19 @@
 import itertools
 
-def calc_next_genotype_freqs(allele_frequencs):
+def calc_next_genotype_freqs(allele_frequencs, covariance):
     """
     Calculate genotype frequencies for multiple loci with given allele frequencies.
+    Calculation is based on the Hardy-Weinberg equilibrium and inlcudes covariance 
+    between uniting gametes, which varies from:
+        -1 (inbreeding avoidance)
+         0 (random mating)
+        +1 (inbreeding)
+        
+    HW and convariance formulas are:
+        AA = p2 + pqf
+        Aa = 2pq(1-f)
+        Aa = q2 + pqf
+    
 
     Args:
     - allele_frequencs: A list of dictionaries, where each dictionary contains allele frequencies for a locus.
@@ -27,9 +38,9 @@ def calc_next_genotype_freqs(allele_frequencs):
         freq = 1.0
         for idx, (a1, a2) in enumerate(combined_genotype):
             if a1 == a2:
-                freq *= allele_frequencs[idx][a1] ** 2
+                freq *= allele_frequencs[idx][a1] ** 2 + (allele_frequencs[idx][a1] * (1 - allele_frequencs[idx][a1]) * covariance)
             else:
-                freq *= 2 * allele_frequencs[idx][a1] * allele_frequencs[idx][a2]
+                freq *= 2 * allele_frequencs[idx][a1] * allele_frequencs[idx][a2] * (1-covariance)
         combined_genotype_freqs[combined_genotype] = round(freq, 6)
 
     return combined_genotype_freqs

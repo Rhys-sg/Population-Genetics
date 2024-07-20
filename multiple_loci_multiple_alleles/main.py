@@ -11,6 +11,7 @@ from calc_allele_counts import calc_allele_counts
 from calc_allele_freqs import calc_allele_freqs
 from calc_avg_fitness import calc_avg_fitness
 
+from calc_adj_covariance import calc_adj_covariance
 from calc_next_pop import calc_next_pop
 from calc_next_genotype_freqs import calc_next_genotype_freqs
 
@@ -19,23 +20,42 @@ from plot.plot_plotly import create_combined_plot
 
 
 """
+This function simulates the evolution of a population over multiple generations.
+
+Args:
+- generations: The number of generations to simulate.
+- init_genotype_counts: A dictionary containing the initial counts of each genotype in the population.
+- genotype_fitness: A dictionary containing the fitness values for each genotype, relative to the most fit genotype.
+- growth_rate: The growth rate of the population.
+- carrying_capacity: The carrying capacity of the population.
+- drift: The rate of genetic drift.
+- mutations: The rate of mutations.
+- bottleneck_yr: The year in which a bottleneck event occurs.
+- bottleneck_pop: The population size after the bottleneck event.
+- covariance: The covariance between uniting gametes.
+- small_pop_inbreeding: The inbreeding coefficient in small populations. (Not sure if I want this)
+
 TODO:
 variables:
-- non-random mating
+- male/female populations, mating, fitness
+- linked loci/crossing over
 
-small pops:
-- pop-based drift (Make drift inversely proportional to the size of the population)
-- inbreeding
-
-maybes:
-- linked loci
-- recombination/crossing over
-- genotype_fitness vs relative genotype_fitness (currently relative)
-
+- Effective sizes, graphs
+- Change mutation implementation
 """
 
 
-def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitness=None, growth_rate=1, carrying_capacity=None, drift=None, mutations=None, bottleneck_yr=None, bottleneck_pop=None,):
+def pop_gen(generations,
+            init_genotype_counts,
+            genotype_fitness=None,
+            growth_rate=1,
+            carrying_capacity=None,
+            drift=None,
+            mutations=None,
+            bottleneck_yr=None,
+            bottleneck_pop=None,
+            covariance=0,
+            small_pop_inbreeding=0):
     
     # Initialize values
     init_pop = sum(init_genotype_counts.values())
@@ -44,7 +64,7 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
     init_allele_freq = calc_allele_freqs(init_allele_counts)
     init_avg_fitness = calc_avg_fitness(init_genotype_freqs, genotype_fitness)
 
-    # Initialize lists for graphing
+    # Initialize lists to track values over generations
     gens_pop = [init_pop]
     gens_genotype_counts = [init_genotype_counts]
     gens_genotype_freqs = [init_genotype_freqs]
@@ -76,9 +96,10 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
 
         # Calculate variables for recombination and growth
         curr_allele_freqs = calc_allele_freqs(curr_allele_counts)
-        
+        adj_covariance = calc_adj_covariance(covariance, next_pop, carrying_capacity, small_pop_inbreeding)
+
         # Calculate the next generation
-        next_genotype_freqs = calc_next_genotype_freqs(curr_allele_freqs)
+        next_genotype_freqs = calc_next_genotype_freqs(curr_allele_freqs, adj_covariance)
         next_genotype_counts = calc_genotype_counts(next_genotype_freqs, next_pop)
         next_allele_counts = calc_allele_counts(next_genotype_counts)
         next_allele_freqs = calc_allele_freqs(next_allele_counts)
