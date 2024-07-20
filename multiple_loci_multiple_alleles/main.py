@@ -1,22 +1,33 @@
+import matplotlib.pyplot as plt
+import math
+
 from adj_by_fitness import adj_by_fitness
 from adj_by_drift import adj_by_drift
 from adj_by_mutation import adj_by_mutation
 
-from calc_genotype_freqs import calc_genotype_freqs
-from calc_allele_freqs import calc_allele_freqs
-from calc_allele_counts import calc_allele_counts
-
-from calc_next_genotype_freqs import calc_next_genotype_freqs
 from calc_genotype_counts import calc_genotype_counts
+from calc_genotype_freqs import calc_genotype_freqs
+from calc_allele_counts import calc_allele_counts
+from calc_allele_freqs import calc_allele_freqs
+from calc_avg_fitness import calc_avg_fitness
+
+from calc_next_pop import calc_next_pop
+from calc_next_genotype_freqs import calc_next_genotype_freqs
 
 from plot.plot import create_combined_plot
 
-import matplotlib.pyplot as plt
+"""
+Priority:
+- avg_fitness (function, appending, graphing)
+- fix carrying capacity
+"""
+
 """
 TODO:
 variables:
 - genotype_freqs -> genotype_counts
-- growth_rate
+x growth_rate
+- carrying_capacity
 - bottleneck_yr
 - bottleneck_pop
 - non-random mating
@@ -33,13 +44,14 @@ maybes:
 """
 
 
-def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitness=None, growth_rate=1, drift=None, mutations=None):
+def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitness=None, growth_rate=1, carrying_capacity=None, drift=None, mutations=None):
     
     # Initialize values
     init_pop = sum(init_genotype_counts.values())
     init_genotype_freqs = calc_genotype_freqs(init_genotype_counts, init_pop)    
     init_allele_counts = calc_allele_counts(init_genotype_counts)
     init_allele_freq = calc_allele_freqs(init_allele_counts)
+    init_avg_fitness = calc_avg_fitness(init_genotype_freqs, genotype_fitness)
 
     # Initialize lists for graphing
     gens_pop = [init_pop]
@@ -47,6 +59,7 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
     gens_genotype_freqs = [init_genotype_freqs]
     gens_allele_counts = [init_allele_counts]
     gens_allele_freqs = [init_allele_freq]
+    gens_avg_fitness = [init_avg_fitness]
 
     # Repeates for each generation
     for _ in range(generations):
@@ -65,13 +78,14 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
         
         # Calculate variables for recombination and growth
         curr_allele_freqs = calc_allele_freqs(curr_allele_counts)
-        next_pop = gens_pop[-1] * growth_rate
-
+        next_pop = calc_next_pop(gens_pop[-1], growth_rate, carrying_capacity)
+        
         # Calculate the next generation
         next_genotype_freqs = calc_next_genotype_freqs(curr_allele_freqs)
-        next_genotype_counts = calc_genotype_counts(next_genotype_freqs, next_pop, growth_rate)
+        next_genotype_counts = calc_genotype_counts(next_genotype_freqs, next_pop)
         next_allele_counts = calc_allele_counts(next_genotype_counts)
         next_allele_freqs = calc_allele_freqs(next_allele_counts)
+        next_avg_fitness = calc_avg_fitness(next_genotype_freqs, genotype_fitness)
 
         # Append the values to the lists
         gens_pop.append(next_pop)
@@ -79,10 +93,13 @@ def next_genotype_frequencies(generations, init_genotype_counts, genotype_fitnes
         gens_genotype_freqs.append(next_genotype_freqs)
         gens_allele_counts.append(next_allele_counts)
         gens_allele_freqs.append(next_allele_freqs)
+        gens_avg_fitness.append(next_avg_fitness)
 
-    fig = create_combined_plot(gens_genotype_counts,
+    fig = create_combined_plot(gens_pop,
+                               gens_genotype_counts,
                                gens_genotype_freqs,
                                gens_allele_counts,
-                               gens_allele_freqs)
+                               gens_allele_freqs,
+                               gens_avg_fitness)
     plt.show()
 

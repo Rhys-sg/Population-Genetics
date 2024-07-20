@@ -1,4 +1,4 @@
-def calc_genotype_counts(genotype_freq, pop, growth_rate):
+def calc_genotype_counts(genotype_freq, pop):
     """
     Calculate genotype counts from genotype frequencies.
 
@@ -12,4 +12,4 @@ def calc_genotype_counts(genotype_freq, pop, growth_rate):
     
     """
 
-    return {genotype: int(freq * pop * growth_rate) for genotype, freq in genotype_freq.items()}
+    return {genotype: int(freq * pop) for genotype, freq in genotype_freq.items()}
