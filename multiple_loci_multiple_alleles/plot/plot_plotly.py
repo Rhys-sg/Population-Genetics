@@ -5,10 +5,12 @@ from plotly.subplots import make_subplots
 def format_genotype_key(genotype):
     return ', '.join(''.join(pair) for pair in genotype)
 
-def create_combined_plot(gens_pop, gens_genotype_counts, gens_genotype_freqs, gens_allele_counts, gens_allele_freqs, gens_avg_fitness):
+def create_combined_plot(gens_Ne, gens_genotype_counts, gens_genotype_freqs, gens_allele_counts, gens_allele_freqs, gens_avg_fitness):
     color_cycle = pc.qualitative.Plotly
-    
+
     # Collect all keys for color assignment
+    all_Ne = gens_Ne.keys()
+
     all_genotypes = set()
     for gen in gens_genotype_counts + gens_genotype_freqs:
         all_genotypes.update(gen.keys())
@@ -18,8 +20,11 @@ def create_combined_plot(gens_pop, gens_genotype_counts, gens_genotype_freqs, ge
         for locus in gens:
             all_alleles.update(locus.keys())
 
-    all_keys = list(all_genotypes) + list(all_alleles)
+    all_keys = list(all_genotypes) + list(all_alleles) + list(all_Ne)
     colors = {key: color_cycle[i % len(color_cycle)] for i, key in enumerate(all_keys)}
+    
+    # Set population to black
+    colors['N'] = 'black'
 
     # Process data
     def collect_data(gens_data):
@@ -76,7 +81,7 @@ def create_combined_plot(gens_pop, gens_genotype_counts, gens_genotype_freqs, ge
         ]
     )
 
-    traces = add_traces({'Population Size': gens_pop}, 'lines', 'Population Size Over Generations', 'Count')
+    traces = add_traces(gens_Ne, 'lines', 'Population Size and Effective Size Over Generations', 'Count')
     for trace in traces:
         fig.add_trace(trace, row=1, col=1)
 

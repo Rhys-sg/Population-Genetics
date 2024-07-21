@@ -1,9 +1,9 @@
-def calc_next_pop(N, r, K):
+def calc_next_N(N, r, K):
     """
     Calculates the size of the next population based on Verhulst's model:
     - dN/dt = rate of population change
     -     r = maximum population growth rate
-    -     N = population size
+    -     N = current population size
     -     K = population carrying capacity
     """
 

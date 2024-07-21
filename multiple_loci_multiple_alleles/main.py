@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import plotly 
 
+from transform_genotype_data import transform_genotype_data, calc_genotype_counts_from_mf, calc_sex_counts
+
 from adj_by_fitness import adj_by_fitness
 from adj_by_drift import adj_by_drift
 from adj_by_mutation import adj_by_mutation
@@ -12,8 +14,11 @@ from calc_allele_freqs import calc_allele_freqs
 from calc_avg_fitness import calc_avg_fitness
 
 from calc_adj_covariance import calc_adj_covariance
-from calc_next_pop import calc_next_pop
+from calc_sex_freq import calc_sex_freq
+from calc_next_N import calc_next_N
 from calc_next_genotype_freqs import calc_next_genotype_freqs
+
+from calc_Ne import calc_Ne_over_generations
 
 # from plot.plot import create_combined_plot
 from plot.plot_plotly import create_combined_plot
@@ -46,48 +51,55 @@ variables:
 
 
 def pop_gen(generations,
-            init_genotype_counts,
-            genotype_fitness=None,
+            genotype_data,
             growth_rate=1,
             carrying_capacity=None,
             drift=None,
             mutations=None,
             bottleneck_yr=None,
-            bottleneck_pop=None,
+            bottleneck_N=None,
             covariance=0,
             small_pop_inbreeding=0):
     
+    # Transform genotype data
+    genotype_m, genotype_f, genotype_fitness = transform_genotype_data(genotype_data)
+    init_genotype_counts = calc_genotype_counts_from_mf(genotype_m, genotype_f)
+    init_Nm, init_Nf = calc_sex_counts(genotype_m, genotype_f)
+    
     # Initialize values
-    init_pop = sum(init_genotype_counts.values())
-    init_genotype_freqs = calc_genotype_freqs(init_genotype_counts, init_pop)    
+    init_N = sum(init_genotype_counts.values())
+    init_genotype_freqs = calc_genotype_freqs(init_genotype_counts, init_N)    
     init_allele_counts = calc_allele_counts(init_genotype_counts)
     init_allele_freq = calc_allele_freqs(init_allele_counts)
     init_avg_fitness = calc_avg_fitness(init_genotype_freqs, genotype_fitness)
 
     # Initialize lists to track values over generations
-    gens_pop = [init_pop]
+    gens_N = [init_N]
+    gens_Nm = [init_Nm]
+    gens_Nf = [init_Nf]
     gens_genotype_counts = [init_genotype_counts]
     gens_genotype_freqs = [init_genotype_freqs]
     gens_allele_counts = [init_allele_counts]
     gens_allele_freqs = [init_allele_freq]
     gens_avg_fitness = [init_avg_fitness]
+    gens_covariance = [covariance]
 
     # Repeates for each generation
     for i in range(generations):
         curr_genotype_counts = gens_genotype_counts[-1]
 
         # Calculate population size for the next generation, apply bottleneck
-        if bottleneck_yr == i and next_pop > bottleneck_pop:
-            curr_genotype_counts = adj_by_drift(curr_genotype_counts, 1-bottleneck_pop/next_pop, bottleneck_pop, carrying_capacity)
-            next_pop = bottleneck_pop
+        if bottleneck_yr == i and next_N > bottleneck_N:
+            curr_genotype_counts = adj_by_drift(curr_genotype_counts, 1-bottleneck_N/next_N, bottleneck_N, carrying_capacity)
+            next_N = bottleneck_N
         else:
-            next_pop = calc_next_pop(gens_pop[-1], growth_rate, carrying_capacity)
+            next_N = calc_next_N(gens_N[-1], growth_rate, carrying_capacity)
 
         # Apply evolutionary forces to genotypes in the current generation
         if genotype_fitness:
             curr_genotype_counts = adj_by_fitness(curr_genotype_counts, genotype_fitness)
         if drift:
-            curr_genotype_counts = adj_by_drift(curr_genotype_counts, drift, next_pop, carrying_capacity)
+            curr_genotype_counts = adj_by_drift(curr_genotype_counts, drift, next_N, carrying_capacity)
 
         # Apply evolutionary forces to alleles in the current generation
         curr_allele_counts = calc_allele_counts(curr_genotype_counts)
@@ -96,24 +108,34 @@ def pop_gen(generations,
 
         # Calculate variables for recombination and growth
         curr_allele_freqs = calc_allele_freqs(curr_allele_counts)
-        adj_covariance = calc_adj_covariance(covariance, next_pop, carrying_capacity, small_pop_inbreeding)
+        adj_covariance = calc_adj_covariance(covariance, next_N, carrying_capacity, small_pop_inbreeding)
+
+        # TODO: Calculate the male/female populations for the next generation
+        next_Nm = calc_sex_freq(gens_Nm[-1], gens_Nf[-1]) * next_N
+        next_Nf = calc_sex_freq(gens_Nf[-1], gens_Nm[-1]) * next_N
 
         # Calculate the next generation
         next_genotype_freqs = calc_next_genotype_freqs(curr_allele_freqs, adj_covariance)
-        next_genotype_counts = calc_genotype_counts(next_genotype_freqs, next_pop)
+        next_genotype_counts = calc_genotype_counts(next_genotype_freqs, next_N)
         next_allele_counts = calc_allele_counts(next_genotype_counts)
         next_allele_freqs = calc_allele_freqs(next_allele_counts)
         next_avg_fitness = calc_avg_fitness(next_genotype_freqs, genotype_fitness)
 
         # Append the values to the lists
-        gens_pop.append(next_pop)
+        gens_N.append(next_N)
+        gens_Nm.append(next_Nm)
+        gens_Nf.append(next_Nf)
         gens_genotype_counts.append(next_genotype_counts)
         gens_genotype_freqs.append(next_genotype_freqs)
         gens_allele_counts.append(next_allele_counts)
         gens_allele_freqs.append(next_allele_freqs)
         gens_avg_fitness.append(next_avg_fitness)
+        gens_covariance.append(adj_covariance)
 
-    fig = create_combined_plot(gens_pop,
+    # Calculate effective population sizes over generations
+    gens_Ne = calc_Ne_over_generations(gens_Nm, gens_Nf, gens_allele_freqs)
+
+    fig = create_combined_plot(gens_Ne,
                                gens_genotype_counts,
                                gens_genotype_freqs,
                                gens_allele_counts,

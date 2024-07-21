@@ -1,31 +1,49 @@
-import random
 import itertools
+from collections import defaultdict
+import random
 
-def generate_alleles(num_alleles, loci_names):
-    return {locus: [f"{locus}{i+1}" for i in range(num_alleles)] for locus in loci_names}
+def generate_genotype_data(loci, alleles, Nm_min, Nm_max, Nf_min, Nf_max, seed=None):
+    """
+    Generate all possible genotypes given loci and alleles, with random fitness values,
+    and specified ranges for the number of males and females.
 
-def generate_genotype_combinations(alleles):
-    loci = list(alleles.keys())
-    allele_pairs = {locus: list(itertools.combinations_with_replacement(alleles[locus], 2)) for locus in loci}
-    all_combinations = list(itertools.product(*[allele_pairs[locus] for locus in loci]))
-    return all_combinations
+    Parameters:
+    loci (int): The number of loci.
+    alleles (int): The number of alleles per locus.
+    Nm_min (int): The minimum number of males for each genotype.
+    Nm_max (int): The maximum number of males for each genotype.
+    Nf_min (int): The minimum number of females for each genotype.
+    Nf_max (int): The maximum number of females for each genotype.
+    seed (int, optional): Random seed for reproducibility.
 
-def generate_genotype_data(num_loci, num_alleles, population_size, loci_names=None, random_seed=None):
-    random.seed(random_seed)
+    Returns:
+    dict: Dictionary with all possible genotypes and properties for 'male', 'female', and 'fitness'.
+    """
+    if seed is not None:
+        random.seed(seed)
 
-    if not loci_names:
-        loci_names = [chr(i) for i in range(65, 65 + num_loci)]
+    loci_letters = [chr(ord('A') + i) for i in range(loci)]
+    alleles_numbers = [f"{loci_letters[i]}{j+1}" for i in range(loci) for j in range(alleles)]
+
+    def get_combinations(alleles):
+        return list(itertools.combinations_with_replacement(alleles, 2))
+
+    all_locus_combinations = [get_combinations(alleles_numbers[i*alleles:(i+1)*alleles]) for i in range(loci)]
+
+    genotypes = list(itertools.product(*all_locus_combinations))
     
-    alleles = generate_alleles(num_alleles, loci_names)
-    genotype_combinations = generate_genotype_combinations(alleles)
-    
-    genotype_counts = {}
-    genotype_fitness = {}
-    
-    for genotype in genotype_combinations:
-        count = random.randint(1, population_size // len(genotype_combinations))
-        fitness = round(random.uniform(0.8, 1.0), 1)
-        genotype_counts[genotype] = count
-        genotype_fitness[genotype] = fitness
-    
-    return genotype_counts, genotype_fitness
+    genotype_data = defaultdict(lambda: {
+        'male': random.randint(Nm_min, Nm_max), 
+        'female': random.randint(Nf_min, Nf_max), 
+        'fitness': round(random.uniform(0, 1), 1)
+    })
+
+    for genotype in genotypes:
+        sorted_genotype = tuple(tuple(sorted(pair)) for pair in genotype)
+        genotype_data[sorted_genotype]
+
+    # Set fitness to 1 for a random genotype to emulate relative fitness
+    random_genotype = random.choice(list(genotype_data.keys()))
+    genotype_data[random_genotype]['fitness'] = 1.0
+
+    return dict(genotype_data)
