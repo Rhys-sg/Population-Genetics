@@ -1,14 +1,10 @@
-def adj_by_fitness(genotype_counts, genotype_fitness):
+def adj_by_fitness(curr_genotypes_data):
     """
-    Adjust genotype counts by fitness.
-    
-    Args:
-    - genotype_counts (dict): A dictionary of genotypes and their counts.
-    - genotype_fitness (dict): A dictionary of genotypes and their fitnesses.
-
-    Returns:
-    - dict: A dictionary of genotypes and their adjusted counts
+    Adjust genotype counts by their fitness.
 
     """
+    for data in curr_genotypes_data.values():
+        data['Nm'] = round(data['Nf'] * data['fitness'])
+        data['Nm'] = round(data['Nm'] * data['fitness'])
     
-    return {genotype: round(genotype_counts[genotype] * genotype_fitness[genotype]) for genotype in genotype_counts}
+    return curr_genotypes_data

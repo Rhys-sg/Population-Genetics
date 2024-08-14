@@ -15,22 +15,20 @@ def calc_Ne_sex_ratios(Nm, Nf):
     return Ne
 
 
-def calc_Ne_size_variation(N, window_size=5):
+def calc_Ne_size_variation(N):
     """
-    Calculate effective population size (Ne) based on variation for all previous generations
-    using a fixed window size.
-
+    Calculate effective population size (Ne) based on variation for all previous generations.
+    
     Args:
-    - N: List of population sizes over generations
-    - window_size: Number of generations to consider for calculating Ne
+    - N: List of population sizes over generations=
 
     Returns:
     - Ne: List of effective population sizes for each generation
     """
     Ne = []
-    for i in range(window_size, len(N)):
-        window = N[i-window_size:i]
-        harmonic_mean = sum(1.0 / max(1, N_t) for N_t in window) / window_size
+    for i in range(1, len(N)):
+        window = N[:i]
+        harmonic_mean = sum(1.0 / max(1, N_t) for N_t in window) / len(window)
         Ne.append(1 / harmonic_mean)
     return Ne
 
@@ -85,32 +83,32 @@ def calc_Ne_over_generations(gens_Nm, gens_Nf, gens_allele_freqs):
     N = [Nm + Nf for Nm, Nf in zip(gens_Nm, gens_Nf)]
     gens_allele_freq_list = [list(freq_dict[0].values()) for freq_dict in gens_allele_freqs]
     gens_Ne = {
-        'N' : N,
         'Ne (Sex Ratios)': [calc_Ne_sex_ratios(Nm, Nf) for Nm, Nf in zip(gens_Nm, gens_Nf)],
         'Ne (Size Variation)': calc_Ne_size_variation(N),
         'Ne (Allele Variation)': [calc_Ne_change_in_allele_freq(allele, N_t, t) for allele, N_t, t in zip(gens_allele_freq_list, N, range(len(N)))],
         'Ne (Inbreeding)': [calc_Ne_inbreeding(N_t, t) for N_t, t in zip(N, range(len(N)))],
+        'N' : N,
     }
     return gens_Ne
 
 
 
-# Testing
-if __name__ == "__main__":
-    gens_N = [100, 90, 95]
-    gens_Nm = [30, 40, 35]
-    gens_Nf = [70, 60, 65]
-    gens_genotype_counts_list = [[100, 80, 120],
-                                 [90, 110, 105],
-                                 [95, 85, 115]]
-    inbreeding_coeff_list = [0, 0, 0]
-    allele_freqs_list = [
-        [0.2, 0.5, 0.3],
-        [0.1, 0.4, 0.5]
-    ]
+# # Testing
+# if __name__ == "__main__":
+#     gens_N = [100, 90, 95]
+#     gens_Nm = [30, 40, 35]
+#     gens_Nf = [70, 60, 65]
+#     gens_genotype_counts_list = [[100, 80, 120],
+#                                  [90, 110, 105],
+#                                  [95, 85, 115]]
+#     inbreeding_coeff_list = [0, 0, 0]
+#     allele_freqs_list = [
+#         [0.2, 0.5, 0.3],
+#         [0.1, 0.4, 0.5]
+#     ]
     
-    gens_Ne = calc_Ne_over_generations(gens_Nm, gens_Nf, gens_genotype_counts_list, inbreeding_coeff_list)
-    for key, Ne_values in gens_Ne.items():
-        print(f"Effective population size over generations ({key}): {Ne_values}")
+#     gens_Ne = calc_Ne_over_generations(gens_Nm, gens_Nf, gens_genotype_counts_list, inbreeding_coeff_list)
+#     for key, Ne_values in gens_Ne.items():
+#         print(f"Effective population size over generations ({key}): {Ne_values}")
     
     

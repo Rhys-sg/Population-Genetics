@@ -1,20 +1,15 @@
-def calc_allele_counts(genotype_counts):
+def calc_allele_counts(genotype_data):
     """
-    Calculate allele counts for multiple loci with given genotype counts.
+    Calculate allele counts for multiple loci with given the male/female genotype counts.
 
-    Args:
-    - genotype_counts: A dictionary with genotype counts for all loci.
-
-    Returns:
-    - A list of dictionaries, where each dictionary contains allele counts for a locus.
     """
-    allele_counts = [{} for _ in range(len(next(iter(genotype_counts.keys()))))]
+    allele_counts = [{} for _ in range(len(next(iter(genotype_data.keys()))))]
 
-    for genotype, count in genotype_counts.items():
+    for genotype, data in genotype_data.items():
         for i, locus in enumerate(genotype):
             for allele in locus:
                 if allele not in allele_counts[i]:
                     allele_counts[i][allele] = 0
-                allele_counts[i][allele] += count
+                allele_counts[i][allele] += data['Nm'] + data['Nf']
 
     return allele_counts

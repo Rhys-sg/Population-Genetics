@@ -11,10 +11,11 @@ def calc_next_N(N, r, K):
         dN = N * r
     else:
         dN = r * N * (1 - (N / K))
-    
-    next_N = N + dN
 
     # Ensure the population size never goes negative
-    next_N = max(1, next_N)
+    next_N = max(1, N + dN)
 
     return next_N
+
+# # Test the function with example values
+# print(calc_next_N(10000, 0.1, 1000))

@@ -1,19 +1,53 @@
-def adj_by_mutation(allele_counts, mutations):
-    """
-    Adjust allele counts by mutating one allele into another, given a frequency.
-    Rounds the rate to the nearest whole number becuase you can't have a fraction of an allele.
+import random
 
-    Parameters:
-    - allele_counts (list): A list of dictionaries representing allele counts.
-    - mutations (list): A list of dictionaries representing the rate at which a given genotype mutates into another given genotype.
+def adj_by_mutation(genotype_data, mutation_rate):
+    mutated_data = {k: v.copy() for k, v in genotype_data.items()}
 
-    Returns:
-    - list: A list of dictionaries representing adjusted allele counts
+    for genotype_a, data_a in genotype_data.items():
+        for genotype_b, data_b in genotype_data.items():
+            if genotype_a == genotype_b:
+                continue
+            distance = calc_distance(genotype_a, genotype_b)
+            mutation_prob = mutation_rate ** distance
 
-    """
-    for i, mutation in enumerate(mutations):
-        for key, value in mutation.items():
-            rate = round(allele_counts[i][key[0]] * value)
-            allele_counts[i][key[0]] += rate
-            allele_counts[i][key[1]] -= rate
-    return allele_counts
+            total_individuals = data_a['Nm'] + data_a['Nf']
+            if total_individuals > 0:
+                N_mutations = int((total_individuals * mutation_prob) // (len(genotype_data) * 2))
+                
+                # Ensure mutations do not result in negative counts
+                N_mutations = min(N_mutations, data_a['Nm'])
+                N_mutations = min(N_mutations, data_a['Nf'])
+
+                mutated_data[genotype_a]['Nm'] -= N_mutations
+                mutated_data[genotype_a]['Nf'] -= N_mutations
+                mutated_data[genotype_b]['Nm'] += N_mutations
+                mutated_data[genotype_b]['Nf'] += N_mutations
+
+    return mutated_data
+
+def calc_distance(genotype_a, genotype_b):
+    distance = 0
+    for locus in range(len(genotype_a)):
+        for allele in range(len(genotype_a[locus])):
+            if genotype_a[locus][allele] != genotype_b[locus][allele]:
+                distance += 1
+    return distance
+
+# # Testing
+# genotype_data = {
+#     (('A1', 'A1'), ('B1', 'B1')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
+#     (('A1', 'A1'), ('B1', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
+#     (('A1', 'A1'), ('B2', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
+#     (('A1', 'A2'), ('B1', 'B1')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
+#     (('A1', 'A2'), ('B1', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
+#     (('A1', 'A2'), ('B2', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
+#     (('A2', 'A2'), ('B1', 'B1')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
+#     (('A2', 'A2'), ('B1', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
+#     (('A2', 'A2'), ('B2', 'B2')): {'Nm': 10000, 'Nf' : 10000, 'fitness' : 1.0},
+# }
+
+# mutation_rate = 0.01
+# mutated_data = adj_by_mutation(genotype_data, mutation_rate)
+
+# for genotype, data in mutated_data.items():
+#     print(genotype, data)

@@ -1,15 +1,7 @@
-def calc_genotype_counts(genotype_freq, pop):
+def calc_genotype_counts(genotype_data):
     """
-    Calculate genotype counts from genotype frequencies.
-
-    Args:
-    - genotype_freq (dict): A dictionary of genotype frequencies.
-    - pop (int): The population size.
-    - growth_rate (int): The growth rate of the population.
-
-    Returns:
-    - dict: A dictionary of genotypes and their counts.
+    Calculate genotype counts from genotype data.
     
     """
 
-    return {genotype: int(freq * pop) for genotype, freq in genotype_freq.items()}
+    return {genotype : data['Nm'] + data['Nf'] for genotype, data in genotype_data.items()}

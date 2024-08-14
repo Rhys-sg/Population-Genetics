@@ -111,4 +111,8 @@ def create_combined_plot(gens_Ne, gens_genotype_counts, gens_genotype_freqs, gen
         height=800
     )
 
+    # Update y-axis range for frequency plots
+    fig.update_yaxes(range=[0, 1], row=1, col=3)
+    fig.update_yaxes(range=[0, 1], row=2, col=3)
+
     return fig
