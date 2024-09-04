@@ -1,6 +1,3 @@
-
-import plotly 
-
 from calc_N import calc_N
 from calc_next_N import calc_next_N
 from calc_N_sub import calc_N_sub
@@ -20,7 +17,7 @@ from calc_avgerage_fitness import calc_avgerage_fitness
 
 from calc_Ne import calc_Ne_over_generations
 
-from plot.plot import create_plot
+from plot import create_plot
 
 class pop_gen:
     def __init__(self, growth_rate=0, carrying_capacity=None, max_drift=0, mutation_rate=None, covariance=0):

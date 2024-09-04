@@ -1,6 +1,5 @@
 from generate_punnett_square import generate_punnett_square
 from calc_N import calc_N
-from calc_next_N import calc_next_N
 
 def calc_next_genotypes_data(curr_genotypes_data, next_N, f):
 
