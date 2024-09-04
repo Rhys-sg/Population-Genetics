@@ -16,6 +16,3 @@ def calc_next_N(N, r, K):
     next_N = max(1, N + dN)
 
     return next_N
-
-# # Test the function with example values
-# print(calc_next_N(10000, 0.1, 1000))

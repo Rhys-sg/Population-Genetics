@@ -32,22 +32,3 @@ def calc_distance(genotype_a, genotype_b):
             if genotype_a[locus][allele] != genotype_b[locus][allele]:
                 distance += 1
     return distance
-
-# # Testing
-# genotype_data = {
-#     (('A1', 'A1'), ('B1', 'B1')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
-#     (('A1', 'A1'), ('B1', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
-#     (('A1', 'A1'), ('B2', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
-#     (('A1', 'A2'), ('B1', 'B1')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
-#     (('A1', 'A2'), ('B1', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
-#     (('A1', 'A2'), ('B2', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
-#     (('A2', 'A2'), ('B1', 'B1')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
-#     (('A2', 'A2'), ('B1', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
-#     (('A2', 'A2'), ('B2', 'B2')): {'Nm': 100000, 'Nf' : 100000, 'fitness' : 1.0},
-# }
-
-# mutation_rate = 0.01
-# mutated_data = adj_by_mutation(genotype_data, mutation_rate)
-
-# for genotype, data in mutated_data.items():
-#     print(genotype, data)

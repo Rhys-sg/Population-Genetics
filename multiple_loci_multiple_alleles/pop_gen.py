@@ -20,12 +20,11 @@ from calc_Ne import calc_Ne_over_generations
 from plot import create_plot
 
 class pop_gen:
-    def __init__(self, growth_rate=0, carrying_capacity=None, max_drift=0, mutation_rate=None, covariance=0):
+    def __init__(self, growth_rate=0, carrying_capacity=None, max_drift=0, mutation_rate=None):
         self.growth_rate = growth_rate
         self.carrying_capacity = carrying_capacity
         self.max_drift = max_drift
         self.mutation_rate = mutation_rate
-        self.covariance = covariance
         self._gens_genotype_data = []
     
     def run(self, generations, bottleneck_yr=None, bottleneck_N=None):
@@ -51,7 +50,7 @@ class pop_gen:
                 next_N = bottleneck_N
 
             # Calculate the next generation
-            self.genotype_data = calc_next_genotypes_data(curr_genotypes_data, next_N, self.covariance)
+            self.genotype_data = calc_next_genotypes_data(curr_genotypes_data, next_N)
             self.genotype_data = adj_by_mutation(self.genotype_data, self.mutation_rate)
         
         return self._gens_genotype_data
