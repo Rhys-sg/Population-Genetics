@@ -10,7 +10,9 @@ def generate_genotype_data(loci,
                            Nm_std = None,
                            Nf_avg = None,
                            Nf_std = None,
-                           covariance_avg=None, covariance_std=None, seed=None):
+                           covariance_avg=None,
+                           covariance_std=None,
+                           seed=None):
     """
     Generate all possible genotypes given loci and alleles, with random fitness values,
     and specified averages and standard deviations for the number of males and females.
@@ -67,3 +69,15 @@ def generate_genotype_data(loci,
     genotype_data[random_genotype]['fitness'] = 1.0
 
     return dict(genotype_data)
+
+# # Example usage
+# loci = 2
+# alleles = 3
+# Nm = 1000
+# Nf = 1000
+# seed = 42
+
+# genotype_data = generate_genotype_data(loci, alleles, Nm, Nf, seed)
+
+# for genotype, data in genotype_data.items():
+#     print(genotype, data)
