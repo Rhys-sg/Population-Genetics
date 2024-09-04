@@ -1,3 +1,5 @@
+from generate_genotype_data import generate_genotype_data
+
 from calc_N import calc_N
 from calc_next_N import calc_next_N
 from calc_N_sub import calc_N_sub
@@ -54,6 +56,9 @@ class pop_gen:
             self.genotype_data = adj_by_mutation(self.genotype_data, self.mutation_rate)
         
         return self._gens_genotype_data
+    
+    def generate_genotype_data(self, *args):
+        return generate_genotype_data(*args)
     
     def plot_genotype_counts(self):
         fig = create_plot('Genotype Counts', calc_genotype_counts(self._gens_genotype_data), 'Count')

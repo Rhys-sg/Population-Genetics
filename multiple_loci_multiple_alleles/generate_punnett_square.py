@@ -39,11 +39,3 @@ def generate_punnett_square(genotype_A, genotype_B):
         punnett_square[key] /= total
 
     return punnett_square
-
-# Example usage
-genotype1 = (['A1', 'A2'],)
-genotype2 = (['A1', 'A2'],)
-punnett_square = generate_punnett_square(genotype1, genotype2)
-
-for genotype, count in sorted(punnett_square.items()):
-    print(f"{genotype}: {count}")
