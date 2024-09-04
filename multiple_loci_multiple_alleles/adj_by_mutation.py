@@ -12,7 +12,7 @@ def adj_by_mutation(genotype_data, mutation_rate):
 
             total_individuals = data_a['Nm'] + data_a['Nf']
             if total_individuals > 0:
-                N_mutations = int((total_individuals * mutation_prob) // (len(genotype_data) * 2))
+                N_mutations = int((total_individuals * mutation_prob) / (len(genotype_data) * 2))
                 
                 # Ensure mutations do not result in negative counts
                 N_mutations = min(N_mutations, data_a['Nm'])
@@ -43,7 +43,7 @@ def calc_distance(genotype_a, genotype_b):
 #     (('A1', 'A2'), ('B2', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
 #     (('A2', 'A2'), ('B1', 'B1')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
 #     (('A2', 'A2'), ('B1', 'B2')): {'Nm': 0, 'Nf' : 0, 'fitness' : 1.0},
-#     (('A2', 'A2'), ('B2', 'B2')): {'Nm': 10000, 'Nf' : 10000, 'fitness' : 1.0},
+#     (('A2', 'A2'), ('B2', 'B2')): {'Nm': 100000, 'Nf' : 100000, 'fitness' : 1.0},
 # }
 
 # mutation_rate = 0.01

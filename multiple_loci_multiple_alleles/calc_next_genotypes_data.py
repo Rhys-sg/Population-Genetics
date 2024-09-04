@@ -45,28 +45,3 @@ def calc_next_genotypes_data(curr_genotypes_data, next_N, f):
         data['Nf'] = round(data['Nf'] * next_N)
 
     return next_genotypes_data
-
-# # Example genotype data
-# genotype_data = {
-#     (('A1', 'A1'),): {'Nm': 12, 'Nf': 13, 'fitness': 1.0},
-#     (('A1', 'A2'),): {'Nm': 25, 'Nf': 25, 'fitness': 1.0},
-#     (('A2', 'A2'),): {'Nm': 12, 'Nf': 13, 'fitness': 0.9},
-# }
-
-# # Example parameters
-# f = -1
-# r = 0
-# N = calc_N(genotype_data)
-# K = N 
-
-# next_N = calc_next_N(N, r, K)
-
-# # Calculate next generation genotype data
-# next_gen1 = calc_next_genotypes_data(genotype_data, next_N, f)
-
-# # Output the results
-# for genotype, count in sorted(next_gen1.items()):
-#     print(f"{genotype}: {count}")
-
-# print("Total Nm + Nf in current genotypes data:", sum([data['Nm'] + data['Nf'] for data in genotype_data.values()]))
-# print("Total Nm + Nf in next genotypes data:", sum([data['Nm'] + data['Nf'] for data in next_gen1.values()]))

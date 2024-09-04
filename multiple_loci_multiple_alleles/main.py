@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import plotly 
 
 from calc_N import calc_N
@@ -13,27 +12,19 @@ from adj_by_mutation import adj_by_mutation
 from calc_next_genotypes_data import calc_next_genotypes_data
 
 from calc_genotype_counts import calc_genotype_counts
-from calc_genotype_freqs import calc_genotype_freqs
+from calc_genotype_frequencies import calc_genotype_frequencies
 from calc_allele_counts import calc_allele_counts
 from calc_allele_freqs import calc_allele_freqs
-from calc_avg_fitness import calc_avg_fitness
+from calc_avgerage_fitness import calc_avgerage_fitness
 
 from calc_Ne import calc_Ne_over_generations
 
-# from plot.plot import create_combined_plot
+from plot.plot import create_plot
 from plot.plot_plotly import create_combined_plot
-
 
 """
 This function simulates the evolution of a population over multiple generations.
 
-TODO:
-- Change mutation implementation
-- implement bottleneck
-- implement muation
-
-Design decisions/questions:
-- Make drift only decrease population?
 
 TODO (future):
 - male/female fitness
@@ -90,7 +81,7 @@ def pop_gen(generations,
         allele_counts = calc_allele_counts(genotype_data)
         gens_allele_counts.append(allele_counts)
         gens_allele_freqs.append(calc_allele_freqs(allele_counts))
-        gens_avg_fitness.append(calc_avg_fitness(genotype_data))
+        gens_avg_fitness.append(calc_avgerage_fitness(genotype_data))
 
     # Calculate effective population sizes over generations
     gens_Ne = calc_Ne_over_generations(gens_Nm, gens_Nf, gens_allele_freqs)
@@ -103,7 +94,7 @@ def pop_gen(generations,
                                gens_allele_freqs,
                                gens_avg_fitness)
     
+    # fig = create_plot('Genotype Counts', allele_counts, 'count')
+
     # Graph
     fig.show()
-    plt.show()
-
