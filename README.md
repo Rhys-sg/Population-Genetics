@@ -4,6 +4,12 @@
 
 The PopGen class simulates population genetics over multiple generations. It models the evolution of genotype data based on various evolutionary forces such as fitness, drift, mutation, etc. The class includes methods for running simulations, generating genotype data, and visualizing the results. The latter includes functionality to plot various aspects of the simulation, including genotype counts, allele frequencies, population sizes, and effective population sizes.
 
+## Usage:
+
+For example cases, see pop_gen_interface.ipynb.
+
+This file includes examples for different parameters for running the simulation. It includes applications for simple Hardy–Weinberg models, specified and randomly generated genotype data.
+
 ## Purpose
 
 This simulator provides a practical approach for dealing with complex equations and systems where analytical solutions are challenging or impossible. Simulators are widely used when traditional equations grow exponentially more complicated as we add additional factors. For example, To calculate the genotype frequencies for one locus with two alleles _A_ and _B_, we can use the simplest case of the Hardy–Weinberg model, which states that allele and genotype frequencies in a population will remain constant from generation to generation in the absence of other evolutionary influences. Under these conditions, we can use the following equations where _p_ and _q_ are the frequencies of alleles _A_ and _B_, respectively.
