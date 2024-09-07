@@ -22,14 +22,36 @@ from calc_Ne import calc_Ne_over_generations
 from plot import create_plot
 
 class PopGen:
-    def __init__(self, growth_rate=0, carrying_capacity=None, max_drift=0, mutation_rate=None):
-        self.growth_rate = growth_rate
-        self.carrying_capacity = carrying_capacity
-        self.max_drift = max_drift
-        self.mutation_rate = mutation_rate
+    def __init__(self):
+        """
+        The PopGen class simulates population genetics over multiple generations.
+        It models the evolution of genotype data based on various evolutionary forces such as fitness,
+        drift, mutation, etc. The class includes methods for running simulations, generating genotype data,
+        and visualizing the results. The latter includes functionality to plot various aspects of the
+        simulation, including genotype counts, allele frequencies, population sizes, and effective population sizes.
+
+        Public Attributes:
+         - growth_rate (float): The growth rate of the population (default 0, no population growth).
+         - carrying_capacity (int): The carrying capacity of the population (default None, no limit).
+         - max_drift (float): The maximum drift rate for allele frequencies (default 0, no drift).
+         - mutation_rate (float): The mutation rate for alleles (default None, no mutation).
+         - genotype_data (dict): The genotype data for the current generation.
+
+        Private Attributes:
+         - _gens_genotype_data (list): A list of genotype data for each generation.
+
+        """
+        self.growth_rate = 0
+        self.carrying_capacity = None
+        self.max_drift = 0
+        self.mutation_rate = None
+        self.genotype_data = None
         self._gens_genotype_data = []
     
     def run(self, generations, bottleneck_yr=None, bottleneck_N=None):
+        """
+        Runs the simulation for the specified number of generations.
+        """
         if self.genotype_data is None:
             raise ValueError("Genotype data must be provided")
         
@@ -40,6 +62,10 @@ class PopGen:
         return self._gens_genotype_data
 
     def calc_generation(self, i, bottleneck_yr=None, bottleneck_N=None):
+        """
+        Calculates the genotype data for the next generation.
+        """
+        
         # Append the next generation to the list of generations
         self._gens_genotype_data.append(self.genotype_data)
 
@@ -60,29 +86,51 @@ class PopGen:
         self.genotype_data = adj_by_mutation(self.genotype_data, self.mutation_rate)
     
     def generate_genotype_data(self, *args):
+        """
+        Generates genotype data based on the specified arguments.
+        """
         return generate_genotype_data(*args)
     
     def plot_genotype_counts(self):
+        """
+        Plots the population size of each genotype over generations.
+        """
+
         fig = create_plot('Genotype Counts', calc_genotype_counts(self._gens_genotype_data), 'Count')
         fig.show()
     
     def plot_genotype_frequencies(self):
+        """
+        Plots the frequency of each genotype over generations.
+        """
         fig = create_plot('Genotype Frequencies', calc_genotype_frequencies(self._gens_genotype_data), 'Frequency')
         fig.show()
 
     def plot_allele_counts(self):
+        """
+        Plots the counts of each allele over generations.
+        """
         fig = create_plot('Allele Counts', calc_allele_counts(self._gens_genotype_data), 'Count')
         fig.show()
 
     def plot_allele_frequencies(self):
+        """
+        Plots the frequencies of each allele over generations.
+        """
         fig = create_plot('Allele Frequencies', calc_allele_frequencies(self._gens_genotype_data), 'Frequency')
         fig.show()
     
     def plot_population_sizes(self):
+        """
+        Plots the population sizes over generations.
+        """
         fig = create_plot('Population Size', calc_population_sizes(self._gens_genotype_data), 'Population Sizes')
         fig.show()
     
     def plot_effective_population_sizes(self):
+        """
+        Plots the effective population sizes over generations.
+        """
         gens_Nm = calc_N_sub(self._gens_genotype_data, 'Nm')
         gens_Nf = calc_N_sub(self._gens_genotype_data, 'Nf')
         gens_allele_freqs = calc_allele_frequencies(self._gens_genotype_data)
@@ -93,5 +141,8 @@ class PopGen:
         fig.show()
     
     def plot_average_fitness(self):
+        """
+        Plots the average fitness over generations.
+        """
         fig = create_plot('Average Fitness', calc_avgerage_fitness(self._gens_genotype_data), 'Fitness')
         fig.show()
