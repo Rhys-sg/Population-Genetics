@@ -85,11 +85,11 @@ class PopGen:
         self.genotype_data = calc_next_genotypes_data(curr_genotypes_data, next_N)
         self.genotype_data = adj_by_mutation(self.genotype_data, self.mutation_rate)
     
-    def generate_genotype_data(self, *args):
+    def generate_genotype_data(self, *args, **kargs):
         """
         Generates genotype data based on the specified arguments.
         """
-        return generate_genotype_data(*args)
+        return generate_genotype_data(*args, **kargs)
     
     def plot_genotype_counts(self):
         """
