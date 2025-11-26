@@ -84,6 +84,17 @@ class PopGen:
         # Calculate the next generation
         self.genotype_data = calc_next_genotypes_data(curr_genotypes_data, next_N)
         self.genotype_data = adj_by_mutation(self.genotype_data, self.mutation_rate)
+
+
+    def get_last_average_fitness(self):
+        """
+        Returns the average fitness of the last generation.
+        """
+        try:
+            return calc_avgerage_fitness(self._gens_genotype_data)[-1]
+        except:
+            return 0
+    
     
     def generate_genotype_data(self, *args, **kargs):
         """

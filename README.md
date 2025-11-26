@@ -6,7 +6,7 @@ The PopGen class simulates population genetics over multiple generations. It mod
 
 ## Usage:
 
-For example cases, see pop_gen_interface.ipynb.
+For example cases, see example.ipynb.
 
 This file includes examples for different parameters for running the simulation. It includes applications for simple Hardy–Weinberg models, specified and randomly generated genotype data.
 

@@ -9,7 +9,7 @@ def calc_avgerage_fitness(gens_genotype_data):
     for genotype_data in gens_genotype_data:
         avg_fitness = 0
         for data in genotype_data.values():
-            avg_fitness += (data['Nm'] + data['Nf']) * data['fitness']
+            avg_fitness += (data['Nm'] * data['Wm']) + (data['Nf'] * data['Wf'])
 
         N  = calc_N(genotype_data)
 
